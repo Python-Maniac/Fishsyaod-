@@ -1,0 +1,52 @@
+from tkinter import *
+import random
+import math
+window=Tk()
+
+canvas=Canvas(window, height=700, width=1200, bg="brown")
+canvas.pack()
+
+deckofcards=[]
+for i in range(13):
+    deckofcards.append([str(i+1), "spades"])
+    deckofcards.append([str(i+1), "clubs"])
+    deckofcards.append([str(i+1), "diamonds"])
+    deckofcards.append([str(i+1), "hearts"])
+
+hands=[[],[],[],[],[]]
+
+player=0
+
+deckx=0
+decky=0
+
+def makeimage(frametomake, x, y, size):
+    for i in range(len(frametomake)):
+        try:
+            canvas.create_rectangle(frametomake[i][0]*size+x,frametomake[i][1]*size+y,frametomake[i][2]*size+x,frametomake[i][3]*size+y,fill=frametomake[i][4], outline="")
+        except:
+            totallyrandomvariableequalsnothing=0
+
+def drawcard(i):
+    fish=random.randint(0, len(deckofcards))
+    hands[i].append(deckofcards[fish])
+    deckofcards.pop(fish)
+
+def createscreen():
+    global deckx, decky
+    canvas.delete("all")
+    canvas.create_rectangle(deckx, decky, deckx+40, decky+100, fill="red")
+    canvas.create_text(deckx+20, decky+50, text=str(len(deckofcards)))
+    for i in range(len(hands[player])):
+        canvas.create_rectangle(50+i*60, 575, 90+i*60, 675, fill="red")
+        canvas.create_text(70+i*60, 625, text=hands[player][i])
+    canvas.after(20, createscreen)
+
+def onclick(event):
+    global deckx, decky, player
+    if event.x>deckx and event.x<deckx+40 and event.y>decky and event.y<decky+100:
+        drawcard(player)
+
+createscreen()
+window.bind("<Button-1>", onclick)
+window.mainloop()
